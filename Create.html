@@ -26,7 +26,7 @@
       padding: 0px;
     }
 
-    #qrcode img {
+    #qrcode * {
       max-width: 100%;
       width: 100%;
     }
@@ -112,7 +112,9 @@
 
     $('#copy').on('click', async function () {
       try {
-        const base64Data = $('#qrcode img').attr('src').split(',')[1];
+        let src = $('#qrcode img').attr('src');
+        src = src ? src : $('#qrcode canvas')[0].toDataURL('image/png');
+        const base64Data = src.split(',')[1];
         const byteCharacters = atob(base64Data);
         const byteNumbers = new Array(byteCharacters.length);
         for (let i = 0; i < byteCharacters.length; i++) {
@@ -133,8 +135,9 @@
 
     $('#download').on('click', function () {
       const a = document.createElement('a');
-      a.href = $('#qrcode img').attr('src');
       a.download = 'qrcode.png';
+      const src = $('#qrcode img').attr('src');
+      a.href = src ? src : $('#qrcode canvas')[0].toDataURL('image/png');
       a.click();
     });
   </script>
