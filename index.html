@@ -49,7 +49,7 @@
     <div class="d-flex flex-column w-100">
       <div id="qr-reader" class="w-100"></div>
       <div class="w-100 d-flex flex-column">
-        <a href="#" title="#">
+        <a id="result" href="#" title="#">
           <h1 class="content"></h1>
         </a>
         <button type="button" class="copy-content">Copy Content</button>
@@ -80,7 +80,7 @@
       });
 
       function onScanSuccess(decodedText, decodedResult) {
-        $('a').attr('href', decodedText);
+        $('a#result').attr('href', decodedText);
         $('.content').text(decodedText);
         $('.wifi').text('');
         if (decodedText.startsWith('WIFI:')) {
