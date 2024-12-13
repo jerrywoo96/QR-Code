@@ -31,24 +31,41 @@
         <div class="col-sm-12">
           <label for="text">Text</label>
           <input type="text" class="form-control" id="text" placeholder="Enter text" value="" />
-          <button type="button" onclick="generate();" class="btn btn-primary mt-2">Generate</button>
+          <button type="button" onclick="generate(this);" class="btn btn-primary mt-2">Generate</button>
+        </div>
+      </div>
+      <div id="wifi" class="row">
+        <div class="col-sm-12">
+          <label for="text">WiFi</label>
+          <label for="SSID">SSID: </label><input type="text" class="form-control" id="SSID" placeholder="SSID" value="" />
+          <label for="Password">Password: </label><input type="text" class="form-control" id="Password" placeholder="Password" value="" />
+          <label for="Security">Security: </label><select class="form-control" id="Security">
+            <option value="SAE">WPA3</option>
+            <option value="WPA">WPA2/WPA</option>
+            <option value="WEP">WEP</option>
+            <option value="">Open</option>
+          </select>
+          <!-- <label for="Hidden">Hidden: </label><input type="checkbox" class="" id="Hidden" /><br /> -->
+          <span id="generatedWiFiText"></span><br />
+          <button type="button" onclick="generateWiFi(this);" class="btn btn-primary mt-2">Generate</button>
         </div>
       </div>
       <div class="row">
-        <div class="col-sm-12">
+        <div class="col-sm-12 text-center">
+          <h1 id="generatedText"></h1>
           <div id="qrcode"></div>
         </div>
       </div>
     </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/core-js-bundle/minified.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
-  <script>
+  <script type="text/javascript" crossorigin="anonymous" referrerpolicy="no-referrer" src="https://cdn.jsdelivr.net/npm/core-js-bundle/minified.min.js"></script>
+  <script type="text/javascript" crossorigin="anonymous" referrerpolicy="no-referrer" src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+  <script type="text/javascript" crossorigin="anonymous" referrerpolicy="no-referrer" src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+  <script type="text/javascript">
     'use strict';
 
-    let qrcode = new QRCode(document.getElementById('qrcode'), {
+    const qrcode = new QRCode(document.getElementById('qrcode'), {
       width: 512,
       height: 512,
       colorDark: '#000000',
@@ -56,10 +73,26 @@
       correctLevel: QRCode.CorrectLevel.H
     });
 
-    $('button').click(() => {
+    function generate(_) {
       qrcode.clear();
       qrcode.makeCode($('input').val());
-    });
+      $('#generatedText').text(qrcode._oQRCode.dataList[0].data);
+    }
+
+    $('#text').on('input', generate);
+
+    function generateWiFi(_) {
+      qrcode.clear();
+      const security = $('#Security').val();
+      const password = security ? $('#Password').val() : '';
+      // const text = `WIFI:H:${$('#Hidden').prop('checked')};${security ? `T:${security};` : ''}S:${$('#SSID').val()};${password ? `P:${password};` : ''}`;
+      const text = `WIFI:${security ? `T:${security};` : ''}S:${$('#SSID').val()};${password ? `P:${password};` : ''}`;
+      $('#generatedWiFiText').text(text);
+      qrcode.makeCode(text);
+      $('#generatedText').text(qrcode._oQRCode.dataList[0].data);
+    }
+
+    $('#wifi input, #wifi select').on('input', generateWiFi);
   </script>
 </body>
 
