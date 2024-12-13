@@ -1,0 +1,21 @@
+{
+  "background_color": "#000000",
+  "description": "QR Utilities",
+  "display": "standalone",
+  "icons": [
+    {
+      "purpose": "any",
+      "sizes": "any",
+      "src": "/QR-Code/favicon.svg",
+      "type": "image/svg+xml"
+    }
+  ],
+  "lang": "en-SG",
+  "name": "QR Utilities",
+  "orientation": "portrait",
+  "prefer_related_applications": false,
+  "scope": "/QR-Code/",
+  "short_name": "QR Utilities",
+  "start_url": "/QR-Code/",
+  "theme_color": "#000000"
+}

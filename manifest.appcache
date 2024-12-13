@@ -1,0 +1,11 @@
+CACHE MANIFEST
+
+CACHE:
+/QR-Code/
+/QR-Code/Create
+/QR-Code/favicon.svg
+https://cdn.jsdelivr.net/npm/bootstrap/dist/css/bootstrap.min.css
+https://cdn.jsdelivr.net/npm/core-js-bundle/minified.min.js
+https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js
+https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js
+https://cdn.jsdelivr.net/npm/html5-qrcode/html5-qrcode.min.js
