@@ -128,7 +128,7 @@
       let selectedDeviceId = '';
       const codeReader = new ZXingBrowser.BrowserQRCodeReader();
       let controls = null;
-      let torch = true;
+      let torch = false;
 
       const sourceSelect = $('#sourceSelect');
       sourceSelect.on('change input', function (_) {
