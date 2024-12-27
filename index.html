@@ -47,7 +47,23 @@
 
   <div class="fit center-content">
     <div class="d-flex flex-column w-100">
-      <div id="qr-reader" class="w-100"></div>
+      <div class="w-100">
+        <div>
+          <video id="video" class="w-100" style="border: 1px solid gray"></video>
+        </div>
+
+        <div id="sourceSelectPanel">
+          <label for="sourceSelect">Change video source:</label>
+          <select id="sourceSelect">
+          </select>
+        </div>
+
+        <div class="mt-1">
+          <button type="button" class="btn btn-primary" id="startButton">Start</button>
+          <button type="button" class="btn btn-primary" id="resetButton">Reset</button>
+          <button type="button" class="btn btn-primary" id="toggleTorch">Torch</button>
+        </div>
+      </div>
       <div class="w-100 d-flex flex-column">
         <a id="result" href="#" title="#">
           <h1 class="content"></h1>
@@ -63,7 +79,7 @@
 
   <script type="text/javascript" crossorigin="anonymous" referrerpolicy="no-referrer" src="https://cdn.jsdelivr.net/npm/core-js-bundle@latest/minified.min.js"></script>
   <script type="text/javascript" crossorigin="anonymous" referrerpolicy="no-referrer" src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script>
-  <script type="text/javascript" crossorigin="anonymous" referrerpolicy="no-referrer" src="https://cdn.jsdelivr.net/npm/html5-qrcode@latest/html5-qrcode.min.js"></script>
+  <script type="text/javascript" crossorigin="anonymous" referrerpolicy="no-referrer" src="https://cdn.jsdelivr.net/npm/@zxing/browser@latest/umd/zxing-browser.min.js"></script>
   <script type="text/javascript">
     'use strict';
 
@@ -109,24 +125,63 @@
         }
       }
 
-      const qrboxFunction = function (viewfinderWidth, viewfinderHeight) {
-        let minEdgePercentage = 0.9;
-        let minEdgeSize = Math.min(viewfinderWidth, viewfinderHeight);
-        let qrboxSize = Math.floor(minEdgeSize * minEdgePercentage);
-        return {
-          width: qrboxSize,
-          height: qrboxSize
-        };
-      };
+      let selectedDeviceId = '';
+      const codeReader = new ZXingBrowser.BrowserQRCodeReader();
+      let controls = null;
+      let torch = true;
 
-      const config = {
-        fps: 60,
-        qrbox: qrboxFunction,
-        showTorchButtonIfSupported: true
-      };
+      const sourceSelect = $('#sourceSelect');
+      sourceSelect.on('change input', function (_) {
+        selectedDeviceId = this.value;
+      });
 
-      const html5QrcodeScanner = new Html5QrcodeScanner("qr-reader", config);
-      html5QrcodeScanner.render(onScanSuccess);
+      $('#toggleTorch').on('click', async function (_) {
+        torch = !torch;
+        if (controls) {
+          await controls.switchTorch(torch);
+        }
+      });
+
+      $('#startButton').on('click', async function (_) {
+        try {
+          controls = await codeReader.decodeFromVideoDevice(selectedDeviceId, $('#video')[0], function (result, err, controls) {
+            if (result) {
+              onScanSuccess(result.text);
+            }
+            if (err && !(err.name === 'e')) {
+              console.error(err);
+            }
+          });
+        } catch (err) {
+          console.error(err);
+        }
+      });
+
+      $('#resetButton').on('click', function (_) {
+        codeReader.reset();
+      });
+
+      ZXingBrowser.BrowserCodeReader.listVideoInputDevices()
+        .then(function (videoInputDevices) {
+          videoInputDevices.sort((a, b) => {
+            const aIncludesBack = a.label.includes('back');
+            const bIncludesBack = b.label.includes('back');
+            if (aIncludesBack && !bIncludesBack) {
+              return -1;
+            } else if (!aIncludesBack && bIncludesBack) {
+              return 1;
+            }
+            return 0;
+          });
+          videoInputDevices.forEach(function (element) {
+            $('<option>').val(element.deviceId).text(element.label).appendTo('#sourceSelect');
+          });
+          selectedDeviceId = videoInputDevices[0].deviceId;
+          sourceSelect.val(selectedDeviceId);
+          if (videoInputDevices.length === 1) {
+            $('#startButton').click();
+          }
+        }).catch(console.error);
 
     });
   </script>
