@@ -157,8 +157,10 @@
         }
       });
 
-      $('#resetButton').on('click', function (_) {
-        codeReader.reset();
+      $('#resetButton').on('click', async function (_) {
+        if (controls) {
+          await controls.stop();
+        }
       });
 
       ZXingBrowser.BrowserCodeReader.listVideoInputDevices()
