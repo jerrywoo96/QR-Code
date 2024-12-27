@@ -109,7 +109,7 @@
         }
       }
 
-      let qrboxFunction = function (viewfinderWidth, viewfinderHeight) {
+      const qrboxFunction = function (viewfinderWidth, viewfinderHeight) {
         let minEdgePercentage = 0.9;
         let minEdgeSize = Math.min(viewfinderWidth, viewfinderHeight);
         let qrboxSize = Math.floor(minEdgeSize * minEdgePercentage);
@@ -119,13 +119,13 @@
         };
       };
 
-      let config = {
+      const config = {
         fps: 60,
         qrbox: qrboxFunction,
         showTorchButtonIfSupported: true
       };
 
-      let html5QrcodeScanner = new Html5QrcodeScanner("qr-reader", config);
+      const html5QrcodeScanner = new Html5QrcodeScanner("qr-reader", config);
       html5QrcodeScanner.render(onScanSuccess);
 
     });
