@@ -135,7 +135,7 @@
 
     $('#download').on('click', function () {
       const a = document.createElement('a');
-      a.download = 'qrcode.png';
+      a.download = `${$('#SSID').val()}.png`;
       const src = $('#qrcode img').attr('src');
       a.href = src ? src : $('#qrcode canvas')[0].toDataURL('image/png');
       a.click();
