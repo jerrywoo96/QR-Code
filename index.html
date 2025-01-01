@@ -99,8 +99,8 @@
         $('a#result').attr('href', decodedText);
         $('.content').text(decodedText);
         $('.wifi').text('');
-        if (decodedText.startsWith('WIFI:')) {
-          decodedText = decodedText.replaceAll('WIFI:', '').split(';')
+        if (decodedText.startsWith('WIFI:') || decodedText.startsWith('W01:')) {
+          decodedText = decodedText.replace('W01:', '').replace('WIFI:', '').split(';')
             .filter(function (item) {
               return item.trim() !== '';
             })
